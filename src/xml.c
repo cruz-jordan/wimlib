@@ -1107,6 +1107,42 @@ wimlib_get_xml_data(WIMStruct *wim, void **buf_ret, size_t *bufsize_ret)
 	return wim_reshdr_to_data(xml_reshdr, wim, buf_ret);
 }
 
+/*
+* Return the WIM's XML document as a wimlib_tchar* string.
+* Caller must free *xml_ret using wimlib_free_tstr().
+*/
+WIMLIBAPI int
+wimlib_get_wim_xml(const WIMStruct *wim, wimlib_tchar **xml_ret)
+{
+	void *raw_doc = NULL;
+	size_t raw_doc_size = 0;
+	int ret;
+
+	if (!xml_ret)
+		return WIMLIB_ERR_INVALID_PARAM;
+
+	*xml_ret = NULL;
+
+	/* Existing API, read raw UTF-16LE XML into raw_doc + size in utf16lechar count */
+	ret = wimlib_get_xml_data((WIMStruct *)wim, &raw_doc, &raw_doc_size);
+	if (ret)
+		return ret;
+
+	ret = utf16le_to_tstr((const utf16lechar *)raw_doc, 
+					raw_doc_size, 
+					xml_ret,
+					NULL);
+
+	FREE(raw_doc);
+
+	if (ret) {
+		/* utf16le_to_tstr guarantees *xml_ret is either NULL or valid */
+		return ret;
+	}
+
+	return 0;
+}
+
 WIMLIBAPI int
 wimlib_extract_xml_data(WIMStruct *wim, FILE *fp)
 {

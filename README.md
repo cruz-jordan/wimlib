@@ -1,10 +1,25 @@
+# About this fork
+
+This repository is a small, Windows-focused fork of wimlib version 1.14.5 
+(original project by Eric Biggers, January 2026).
+
+The primary purpose of this fork is to make wimlib slightly more convenient 
+to consume from managed (.NET) code, while keeping all existing behaviour and 
+licensing intact. All changes are additive and backwards-compatible: existing 
+applications that do not use the new APIs will continue to work exactly as 
+with upstream wimlib.
+
+For notes on API additions, see [README.FORK.md](README.FORK.md).
+
+All information that follows below is from the original upstream repository from 
+which this project was forked.
+
 # Introduction
 
-This is wimlib version 1.14.5 (January 2026).  wimlib is a C library for
-creating, modifying, extracting, and mounting files in the Windows Imaging
-Format (WIM files).  wimlib and its command-line frontend `wimlib-imagex`
-provide a free and cross-platform alternative to Microsoft's WIMGAPI, ImageX,
-and DISM.
+wimlib is a C library for creating, modifying, extracting, and mounting files in
+the Windows Imaging Format (WIM files).  wimlib and its command-line frontend 
+`wimlib-imagex` provide a free and cross-platform alternative to Microsoft's 
+WIMGAPI, ImageX, and DISM.
 
 For the release notes, see the [NEWS file](NEWS.md).
 

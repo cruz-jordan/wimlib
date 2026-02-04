@@ -3216,6 +3216,18 @@ wimlib_free(WIMStruct *wim);
 
 /**
  * @ingroup G_general
+ * 
+ * Free a "wimlib_tchar" string previously allocated by either wimlib_get_wim_xml()
+ * or wimlib_load_text_file().
+ * 
+ * @param tstr
+ *  Pointer to the wimlib_tchar string to release. If @c NULL, no action is taken.
+ */
+WIMLIBAPI void
+wimlib_free_tstr(wimlib_tchar *tstr);
+
+/**
+ * @ingroup G_general
  *
  * Convert a ::wimlib_compression_type value into a string.
  *
@@ -3338,6 +3350,26 @@ wimlib_get_version_string(void);
  */
 WIMLIBAPI int
 wimlib_get_wim_info(WIMStruct *wim, struct wimlib_wim_info *info);
+
+/**
+ * @ingroup G_wim_information
+ * 
+ * Load a WIM file's XML document into memory. Similar to wimlib_get_xml_data(),
+ * but the XML is returned as a "wimlib_tchar" string.
+ *
+ * @param wim
+ *  Pointer to the ::WIMStruct to query. This need not represent a
+ *	standalone WIM (e.g. it could represent part of a split WIM).
+ * @param xml_ret
+ *  On success, will point to a newly allocated, null-terminated
+ *  wimlib_tchar string containing the XML document. The caller must free it
+ *  with wimlib_free_tstr().
+ *
+ * @return 0 on success; a ::wimlib_error_code value on failure. This may
+ *  also return any error code which can be returned by wimlib_get_xml_data().
+ */
+WIMLIBAPI int
+wimlib_get_wim_xml(const WIMStruct *wim, wimlib_tchar **xml_ret);
 
 /**
  * @ingroup G_wim_information

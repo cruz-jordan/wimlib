@@ -402,3 +402,11 @@ wimlib_load_text_file(const tchar *path,
 	FREE(buf);
 	return ret;
 }
+
+/* Free a wimlib_tchar string allocated by wimlib_get_wim_xml() or wimlib_load_text_file() */
+WIMLIBAPI void
+wimlib_free_tstr(wimlib_tchar *tstr)
+{
+	if(tstr)
+		FREE(tstr);
+}
