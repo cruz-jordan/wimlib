@@ -1906,3 +1906,28 @@ write_dentry_tree(struct wim_dentry *root, u8 *p)
 
 	return p;
 }
+
+static int
+image_do_dentry_exists(WIMStruct *wim)
+{
+	const tchar *path = wim->private;
+
+	return get_dentry(wim, path, WIMLIB_CASE_PLATFORM_DEFAULT) ? 0 : -1;
+}
+
+/* Determine whether a directory entry exists at a specified path for an image.  */
+WIMLIBAPI int
+wimlib_dir_entry_exists(WIMStruct *wim, int image, const tchar *_path)
+{
+	tchar *path;
+	int ret;
+
+	path = canonicalize_wim_path(_path);
+	if (path == NULL)
+		return WIMLIB_ERR_NOMEM;
+
+	wim->private = path;
+	ret = for_image(wim, image, image_do_dentry_exists);
+	FREE(path);
+	return ret;
+}

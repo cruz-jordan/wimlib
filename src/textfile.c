@@ -407,6 +407,6 @@ wimlib_load_text_file(const tchar *path,
 WIMLIBAPI void
 wimlib_free_tstr(wimlib_tchar *tstr)
 {
-	if(tstr)
+	if (tstr)
 		FREE(tstr);
 }

@@ -250,6 +250,7 @@ write_metadata_resource(WIMStruct *wim, int image, int write_resource_flags)
 					     &wim->out_fd,
 					     wim->out_compression_type,
 					     wim->out_chunk_size,
+						 wim->out_compression_level,
 					     &imd->metadata_blob->out_reshdr,
 					     imd->metadata_blob->hash,
 					     write_resource_flags);

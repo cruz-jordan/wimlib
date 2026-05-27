@@ -488,6 +488,7 @@ wimlib_get_wim_info(WIMStruct *wim, struct wimlib_wim_info *info)
 	info->resource_only = (wim->hdr.flags & WIM_HDR_FLAG_RESOURCE_ONLY) != 0;
 	info->spanned = (wim->hdr.flags & WIM_HDR_FLAG_SPANNED) != 0;
 	info->pipable = wim_is_pipable(wim);
+	info->packed_resources = wim_has_solid_resources(wim);
 	return 0;
 }
 
@@ -560,6 +561,36 @@ wimlib_set_output_pack_compression_type(WIMStruct *wim,
 	/* Reset the chunk size if it's no longer valid.  */
 	if (!wim_chunk_size_valid(wim->out_solid_chunk_size, ctype))
 		wim->out_solid_chunk_size = wim_default_solid_chunk_size(ctype);
+	return 0;
+}
+
+/* API function documented in wimlib.h  */
+WIMLIBAPI int
+wimlib_set_output_compression_level(WIMStruct *wim,
+					unsigned int compression_level)
+{
+	if (compression_level & WIMLIB_COMPRESSOR_FLAG_DESTRUCTIVE)
+		return WIMLIB_ERR_INVALID_PARAM;
+
+	if (compression_level > 0x00FFFFFF)
+		return WIMLIB_ERR_INVALID_PARAM;
+
+	wim->out_compression_level = compression_level;
+	return 0;
+}
+
+/* API function documented in wimlib.h  */
+WIMLIBAPI int
+wimlib_set_output_pack_compression_level(WIMStruct *wim,
+						 unsigned int compression_level)
+{
+	if (compression_level & WIMLIB_COMPRESSOR_FLAG_DESTRUCTIVE)
+		return WIMLIB_ERR_INVALID_PARAM;
+
+	if (compression_level > 0x00FFFFFF)
+		return WIMLIB_ERR_INVALID_PARAM;
+
+	wim->out_solid_compression_level = compression_level;
 	return 0;
 }
 

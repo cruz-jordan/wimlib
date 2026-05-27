@@ -139,6 +139,14 @@ struct WIMStruct {
 	 * wimlib_set_output_pack_compression_type().  */
 	u8 out_solid_compression_type;
 
+	/* Overridden compression level for wimlib_overwrite() or wimlib_write().
+	 * 0 means use the existing default behavior.  */
+	u32 out_compression_level;
+
+	/* Overridden compression level for writing solid resources.
+	 * 0 means use the existing default behavior.  */
+	u32 out_solid_compression_level;
+
 	/* If this WIM is backed by a file, then this is the compression chunk
 	 * size for non-solid resources in that file.  */
 	u32 chunk_size;

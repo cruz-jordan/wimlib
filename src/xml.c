@@ -1074,6 +1074,7 @@ write_wim_xml_data(WIMStruct *wim, int image, u64 total_bytes,
 					     &wim->out_fd,
 					     WIMLIB_COMPRESSION_TYPE_NONE,
 					     0,
+						 0,
 					     out_reshdr,
 					     NULL,
 					     write_resource_flags);

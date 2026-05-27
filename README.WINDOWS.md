@@ -85,6 +85,11 @@ user interface available for wimlib or `wimlib-imagex`.  However,
 [Wimlib-clc](https://reboot.pro/files/file/588-wimlib-clc/) is an unofficial,
 Windows-only graphical user interface for `wimlib-imagex`.
 
+This fork's Windows build includes `WimLibApi.dll`, which is a copy of the same
+wimlib DLL provided under a stable name for managed interop consumers. 
+`libwim-15.dll` is still included for the standard `wimlib-imagex.exe` 
+command-line tools.
+
 # Building from source
 
 As with other open source software, advanced users may choose to build wimlib
@@ -103,7 +108,7 @@ Then, open any MSYS2 shell and run the following command:
 After that, open any MSYS2 shell again and run the following commands:
 
     pacman -Syu --noconfirm git
-    git clone https://wimlib.net/git/wimlib
+    git clone https://github.com/cruz-jordan/wimlib.git
 
 Note: By default the git repository will be on the `master` branch, which is the
 latest development snapshot.  Optionally, you can check out a specific version,

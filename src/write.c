@@ -1473,6 +1473,7 @@ write_blob_list(struct list_head *blob_list,
 		int write_resource_flags,
 		int out_ctype,
 		u32 out_chunk_size,
+		u32 out_compression_level,
 		unsigned num_threads,
 		struct blob_table *blob_table,
 		struct filter_context *filter_ctx,
@@ -1554,6 +1555,7 @@ write_blob_list(struct list_head *blob_list,
 		if (num_nonraw_bytes > max(2000000, out_chunk_size)) {
 			ret = new_parallel_chunk_compressor(out_ctype,
 							    out_chunk_size,
+								out_compression_level,
 							    num_threads, 0,
 							    &ctx.compressor);
 			if (ret > 0) {
@@ -1565,6 +1567,7 @@ write_blob_list(struct list_head *blob_list,
 
 		if (ctx.compressor == NULL) {
 			ret = new_serial_chunk_compressor(out_ctype, out_chunk_size,
+							  out_compression_level,
 							  &ctx.compressor);
 			if (ret)
 				goto out_destroy_context;
@@ -1667,6 +1670,7 @@ write_file_data_blobs(WIMStruct *wim,
 {
 	int out_ctype;
 	u32 out_chunk_size;
+	u32 out_compression_level;
 	int write_resource_flags;
 
 	write_resource_flags = write_flags_to_resource_flags(write_flags);
@@ -1674,9 +1678,11 @@ write_file_data_blobs(WIMStruct *wim,
 	if (write_resource_flags & WRITE_RESOURCE_FLAG_SOLID) {
 		out_chunk_size = wim->out_solid_chunk_size;
 		out_ctype = wim->out_solid_compression_type;
+		out_compression_level = wim->out_solid_compression_level;
 	} else {
 		out_chunk_size = wim->out_chunk_size;
 		out_ctype = wim->out_compression_type;
+		out_compression_level = wim->out_compression_level;
 	}
 
 	return write_blob_list(blob_list,
@@ -1684,6 +1690,7 @@ write_file_data_blobs(WIMStruct *wim,
 			       write_resource_flags,
 			       out_ctype,
 			       out_chunk_size,
+				   out_compression_level,
 			       num_threads,
 			       wim->blob_table,
 			       filter_ctx,
@@ -1697,6 +1704,7 @@ write_wim_resource(struct blob_descriptor *blob,
 		   struct filedes *out_fd,
 		   int out_ctype,
 		   u32 out_chunk_size,
+		   u32 out_compression_level,
 		   int write_resource_flags)
 {
 	LIST_HEAD(blob_list);
@@ -1707,6 +1715,7 @@ write_wim_resource(struct blob_descriptor *blob,
 			       write_resource_flags & ~WRITE_RESOURCE_FLAG_SOLID,
 			       out_ctype,
 			       out_chunk_size,
+				   out_compression_level,
 			       1,
 			       NULL,
 			       NULL,
@@ -1722,6 +1731,7 @@ write_wim_resource_from_buffer(const void *buf,
 			       struct filedes *out_fd,
 			       int out_ctype,
 			       u32 out_chunk_size,
+				   u32 out_compression_level,
 			       struct wim_reshdr *out_reshdr,
 			       u8 *hash_ret,
 			       int write_resource_flags)
@@ -1742,7 +1752,7 @@ write_wim_resource_from_buffer(const void *buf,
 	blob.is_metadata = is_metadata;
 
 	ret = write_wim_resource(&blob, out_fd, out_ctype, out_chunk_size,
-				 write_resource_flags);
+				 out_compression_level, write_resource_flags);
 	if (ret)
 		return ret;
 
@@ -2198,6 +2208,7 @@ write_metadata_resources(WIMStruct *wim, int image, int write_flags)
 						 &wim->out_fd,
 						 wim->out_compression_type,
 						 wim->out_chunk_size,
+						 wim->out_compression_level,
 						 write_resource_flags);
 		}
 		if (ret)

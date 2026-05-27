@@ -352,6 +352,7 @@ parallel_chunk_compressor_get_compression_result(struct chunk_compressor *_ctx,
 
 int
 new_parallel_chunk_compressor(int out_ctype, u32 out_chunk_size,
+				  u32 compression_level,
 			      unsigned num_threads, u64 max_memory,
 			      struct chunk_compressor **compressor_ret)
 {
@@ -401,7 +402,7 @@ new_parallel_chunk_compressor(int out_ctype, u32 out_chunk_size,
 			+ 1000000
 			+ num_threads * wimlib_get_compressor_needed_memory(out_ctype,
 									    out_chunk_size,
-									    0);
+									    compression_level);
 		if (approx_mem_required <= max_memory)
 			break;
 
@@ -459,7 +460,7 @@ new_parallel_chunk_compressor(int out_ctype, u32 out_chunk_size,
 		dat->chunks_to_compress_queue = &ctx->chunks_to_compress_queue;
 		dat->compressed_chunks_queue = &ctx->compressed_chunks_queue;
 		ret = wimlib_create_compressor(out_ctype, out_chunk_size,
-					       WIMLIB_COMPRESSOR_FLAG_DESTRUCTIVE,
+					       compression_level | WIMLIB_COMPRESSOR_FLAG_DESTRUCTIVE,
 					       &dat->compressor);
 		if (ret)
 			goto err;

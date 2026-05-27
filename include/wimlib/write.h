@@ -69,6 +69,7 @@ write_wim_resource_from_buffer(const void *buf,
 			       struct filedes *out_fd,
 			       int out_ctype,
 			       u32 out_chunk_size,
+				   u32 out_compression_level,
 			       struct wim_reshdr *out_reshdr,
 			       u8 *hash_ret,
 			       int write_resource_flags);

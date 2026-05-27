@@ -1404,7 +1404,10 @@ struct wimlib_wim_info {
 
 	/** 1 iff this WIM file is pipable (see ::WIMLIB_WRITE_FLAG_PIPABLE).  */
 	uint32_t pipable : 1;
-	uint32_t reserved_flags : 22;
+
+	/** 1 iff this WIM contains contains solid resources.  */
+	uint32_t packed_resources : 1;
+	uint32_t reserved_flags : 21;
 	uint32_t reserved[9];
 };
 
@@ -2828,6 +2831,36 @@ wimlib_delete_image(WIMStruct *wim, int image);
 WIMLIBAPI int
 wimlib_delete_path(WIMStruct *wim, int image,
 		   const wimlib_tchar *path, int delete_flags);
+		   
+/**
+ * @ingroup G_wim_information
+ *
+ * Determine whether a directory entry exists at the specified @p path
+ * for a WIM image.
+ *
+ * @param wim
+ * 	The ::WIMStruct containing the image for which to query. The ::WIMStruct
+ * 	must contain image metadata, so in the case of split WIMs, this should be
+ * 	first part.
+ * 
+ * @param image
+ * 	The 1-based index of the image for which to query.
+ * 
+ * @param path
+ * 	Path in the image for which to test.
+ * 
+ * @return 0 if a directory entry exists at the specified path; otherwise -1 if
+ * no directory entry exists at the path in the image. The following additional
+ * ::wimlib_error_code values may also be returned:
+ * 
+ * @retval ::WIMLIB_ERR_INVALID_IMAGE
+ * 	@p image does not exist in @p wim.
+ * 
+ * @retval ::WIMLIB_ERR_NOMEM
+ * 	Insufficient memory to perform the query.
+ */
+WIMLIBAPI int
+wimlib_dir_entry_exists(WIMStruct *wim, int image, const wimlib_tchar *path);
 
 /**
  * @ingroup G_modifying_wims
@@ -4264,6 +4297,47 @@ wimlib_set_output_chunk_size(WIMStruct *wim, uint32_t chunk_size);
  */
 WIMLIBAPI int
 wimlib_set_output_pack_chunk_size(WIMStruct *wim, uint32_t chunk_size);
+
+/**
+ * @ingroup G_writing_and_overwriting_wims
+ *
+ * Set a ::WIMStruct's output compression level. This is the compression
+ * level that will be used for writing non-solid resources in subsequent
+ * calls to wimlib_write() or wimlib_overwrite() for the WIM's output
+ * compression type.
+ * 
+ * The initial state, before this function is called, is that all compression
+ * types have a default compression level of 50.
+ * 
+ * @param wim
+ *	The ::WIMStruct for which to set the output compression level.
+ * 
+ * @param compression_level
+ *	The compression level to set. If 0, the "default" level
+ *	of 50 is restored.  Otherwise, a higher value indicates higher
+ *	compression, whereas a lower value indicates lower compression.
+ *  The values are scaled so that 10 is low compression, 50 is medium
+ *  compression, and 100 is high compression. This is not a percentage;
+ *  values above 100 are also valid.
+ * 
+ * @return 0 on success; a ::wimlib_error_code value on failure.
+ * 
+ * @retval ::WIMLIB_ERR_INVALID_PARAM
+ *  @p compression_level was an unsupported level.
+ */
+WIMLIBAPI int
+wimlib_set_output_compression_level(WIMStruct *wim,
+				   unsigned int compression_level);
+
+/**
+ * @ingroup G_writing_and_overwriting_wims
+ *
+ * Similar to wimlib_set_output_compression_level(), but sets the output 
+ * compression level for writing solid resources.
+ */
+WIMLIBAPI int
+wimlib_set_output_pack_compression_level(WIMStruct *wim,
+						unsigned int compression_level);					
 
 /**
  * @ingroup G_writing_and_overwriting_wims

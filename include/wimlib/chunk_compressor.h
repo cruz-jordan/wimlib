@@ -65,11 +65,13 @@ struct chunk_compressor {
 
 int
 new_parallel_chunk_compressor(int out_ctype, u32 out_chunk_size,
+				  u32 compression_level,
 			      unsigned num_threads, u64 max_memory,
 			      struct chunk_compressor **compressor_ret);
 
 int
 new_serial_chunk_compressor(int out_ctype, u32 out_chunk_size,
+				u32 compression_level,
 			    struct chunk_compressor **compressor_ret);
 
 #endif /* _WIMLIB_CHUNK_COMPRESSOR_H  */

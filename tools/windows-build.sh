@@ -246,6 +246,7 @@ install_binaries()
 {
 	echo "Installing binaries..."
 	cp .libs/*.{dll,exe} "$DESTDIR"
+	cp .libs/libwim-*.dll "$DESTDIR"/WimLibApi.dll
 	strip "$DESTDIR"/*.{dll,exe}
 }
 

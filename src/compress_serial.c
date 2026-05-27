@@ -107,6 +107,7 @@ serial_chunk_compressor_get_compression_result(struct chunk_compressor *_ctx,
 
 int
 new_serial_chunk_compressor(int out_ctype, u32 out_chunk_size,
+				u32 compression_level,
 			    struct chunk_compressor **compressor_ret)
 {
 	struct serial_chunk_compressor *ctx;
@@ -127,7 +128,7 @@ new_serial_chunk_compressor(int out_ctype, u32 out_chunk_size,
 	ctx->base.get_compression_result = serial_chunk_compressor_get_compression_result;
 
 	ret = wimlib_create_compressor(out_ctype, out_chunk_size,
-				       WIMLIB_COMPRESSOR_FLAG_DESTRUCTIVE,
+				       compression_level | WIMLIB_COMPRESSOR_FLAG_DESTRUCTIVE,
 				       &ctx->compressor);
 	if (ret)
 		goto err;

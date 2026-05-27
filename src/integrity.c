@@ -323,6 +323,7 @@ write_integrity_table(WIMStruct *wim,
 					     &wim->out_fd,
 					     WIMLIB_COMPRESSION_TYPE_NONE,
 					     0,
+						 0,
 					     &wim->out_hdr.integrity_table_reshdr,
 					     NULL,
 					     0);
