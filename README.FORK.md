@@ -5,7 +5,7 @@
 This fork exposes one extra public helper for accessing a WIM's XML metadata
 in a managed-friendly way. Plus a corresponding free function:
 
-### [wimlib_get_wim_xml](https://github.com/cruz-jordan/wimlib/blob/master/include/wimlib.h#L3354)
+### [wimlib_get_wim_xml](https://github.com/cruz-jordan/wimlib/blob/master/include/wimlib.h#L3387)
 ```c
 /**
  * @ingroup G_wim_information
@@ -67,7 +67,7 @@ wimlib_get_wim_xml(const WIMStruct *wim, wimlib_tchar **xml_ret)
 }
 ```
 
-### [wimlib_free_tstr](https://github.com/cruz-jordan/wimlib/blob/master/include/wimlib.h#L3217)
+### [wimlib_free_tstr](https://github.com/cruz-jordan/wimlib/blob/master/include/wimlib.h#L3250)
 ```c
 /**
  * @ingroup G_general
@@ -148,7 +148,7 @@ function in the upstream source.
 The below functions have been added for controlling the output compression level of individual
 WIMStruct's:
 
-### [wimlib_set_output_compression_level](https://github.com/cruz-jordan/wimlib/blob/master/include/wimlib.h#L4271)
+### [wimlib_set_output_compression_level](https://github.com/cruz-jordan/wimlib/blob/master/include/wimlib.h#L4302)
 ```c
 /**
  * @ingroup G_writing_and_overwriting_wims
@@ -182,7 +182,7 @@ wimlib_set_output_compression_level(WIMStruct *wim,
 				   unsigned int compression_level);
 ```
 
-### [wimlib_set_output_pack_compression_level](https://github.com/cruz-jordan/wimlib/blob/master/include/wimlib.h#L4302)
+### [wimlib_set_output_pack_compression_level](https://github.com/cruz-jordan/wimlib/blob/master/include/wimlib.h#L4332)
 ```c
 /**
  * @ingroup G_writing_and_overwriting_wims
